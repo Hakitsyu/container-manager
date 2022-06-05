@@ -1,6 +1,5 @@
 package configuration;
 
-import configuration.contexts.JsonConfigurationLoader;
 import configuration.interfaces.IConfiguration;
 import configuration.interfaces.IConfigurationLoader;
 import configuration.interfaces.IConfigurationLoaderContext;

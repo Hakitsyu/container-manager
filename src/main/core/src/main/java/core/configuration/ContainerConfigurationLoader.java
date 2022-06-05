@@ -1,12 +1,13 @@
 package core.configuration;
 
 import configuration.ConfigurationLoader;
-import configuration.contexts.JsonConfigurationLoader;
+import configuration.contexts.json.JsonConfigurationLoader;
+import configuration.contexts.json.exceptions.NotValidJsonException;
 
 import java.nio.file.Path;
 
 public class ContainerConfigurationLoader extends ConfigurationLoader<ContainerConfiguration> {
-    private Path path;
+    private final Path path;
 
     public ContainerConfigurationLoader(Path path) {
         super(new JsonConfigurationLoader<>(ContainerConfiguration.class));
@@ -15,7 +16,6 @@ public class ContainerConfigurationLoader extends ConfigurationLoader<ContainerC
 
     @Override
     public ContainerConfiguration load() {
-        System.out.printf(path.toFile().getAbsolutePath());
-        return context.execute(path.toFile());
+        return context.execute(context.prepare(path.toFile()));
     }
 }

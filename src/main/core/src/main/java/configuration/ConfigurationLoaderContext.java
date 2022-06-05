@@ -1,5 +1,6 @@
 package configuration;
 
+import configuration.contexts.json.exceptions.NotValidJsonException;
 import configuration.interfaces.IConfiguration;
 import configuration.interfaces.IConfigurationLoaderContext;
 
@@ -13,4 +14,5 @@ public abstract class ConfigurationLoaderContext<T extends IConfiguration> imple
     }
 
     public abstract T execute(File file);
+    public abstract File prepare(File file);
 }

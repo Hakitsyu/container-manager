@@ -1,6 +1,5 @@
 package core.factory;
 
-import constants.Constants;
 import core.Container;
 import core.configuration.ContainerConfiguration;
 import core.configuration.ContainerConfigurationWriter;
@@ -13,44 +12,49 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 public class ContainerFactory extends AsyncDirectoryHandler implements IContainerFactory {
-    private Path path;
+    private static final String DEFAULT_CONFIG_FILE = "config.json";
 
     private ContainerConfiguration configuration;
+    private String configurationFile;
     private ContainerFactoryOptions options;
 
-    public ContainerFactory(Path containersPath) {
-        super(containersPath);
-        this.path = containersPath;
-        this.options = new ContainerFactoryOptions();
+    public ContainerFactory(String containersPath) {
+        this(Paths.get(containersPath), new ContainerFactoryOptions());
     }
 
-    public ContainerFactory(String containersPath) {
-        super(containersPath);
-        this.path = Paths.get(containersPath);
-        this.options = new ContainerFactoryOptions();
+    public ContainerFactory(Path containersPath) {
+        this(containersPath, new ContainerFactoryOptions());
+    }
+
+    public ContainerFactory(String containersPath, ContainerFactoryOptions options) {
+        this(Paths.get(containersPath), options);
     }
 
     public ContainerFactory(Path containersPath, ContainerFactoryOptions options) {
         super(containersPath);
-        this.path = containersPath;
         this.options = options;
-    }
-
-    public ContainerFactory(String containersPath, ContainerFactoryOptions options) {
-        super(containersPath);
-        this.path = Paths.get(containersPath);
-        this.options = options;
+        this.configurationFile = DEFAULT_CONFIG_FILE;
     }
 
     private void createConfiguration(File directory) {
         if (this.configuration == null) return;
 
-        String configurationPath = Paths.get(directory.getPath(), Constants.CONFIGURATION_FILE).toString();
+        String configurationPath = Paths.get(directory.getPath(), this.configurationFile).toString();
         new ContainerConfigurationWriter().write(configurationPath, this.configuration);
+    }
+
+    public ContainerFactory configurationFile(String configurationFile) {
+        this.configurationFile = configurationFile;
+        return this;
     }
 
     public ContainerFactory configuration(ContainerConfiguration configuration) {
         this.configuration = configuration;
+        return this;
+    }
+
+    public ContainerFactory options(ContainerFactoryOptions options) {
+        this.options = options;
         return this;
     }
 
